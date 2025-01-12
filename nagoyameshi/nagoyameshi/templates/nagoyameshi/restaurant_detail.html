@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}店舗詳細{% endblock %}
+{% block content %}
+
+<h1>店舗詳細</h1>
+
+<div class="container mt-4">
+    <!-- タブメニュー -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">
+                店舗情報
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">
+                評価
+            </button>
+        </li>
+    </ul>
+
+    <!-- タブの内容 -->
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+
+            <table border="1">
+                <form method="post">
+                    {% csrf_token %}
+                    <tr><td>
+                        {% if user.is_premium %}
+                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                {% if is_favorite %}
+                                    お気に入り登録済み
+                                {% else %}
+                                    お気に入り登録
+                                {% endif %}
+                            </button>
+                        {% else %}
+                            <a type="button" class="btn btn-outline-primary btn-sm" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#forfree-Modal-{{ user.pk }}">お気に入り登録</a>
+                        {% endif %}
+                    </td></tr>
+                </form>
+                <form action="{% url 'reservation' restaurant.pk %}" method="get">
+                    {% csrf_token %}
+                    {% if user.is_premium %}
+                        <button type="submit" class="btn btn-outline-primary btn-sm"  name="reserve">
+                            予約
+                        </button>
+                    {% else %}
+                        <a type="button" class="btn btn-outline-primary btn-sm" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#forfree-Modal-{{ user.pk }}">
+                            予約
+                        </a>
+                    {% endif %}
+                </form> 
+                <tr><th>{{ restaurant.store_name }}</th></tr>
+                <tr><td>{{ restaurant.store_image }}</td></tr>
+                <tr><td>{{ restaurant.store_description }}</td></tr>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+            <form action="{% url 'review_post' restaurant.pk %}" method="get">
+                {% csrf_token %}
+                {% if user.is_premium %}
+                    <button type="submit" class="btn btn-outline-primary btn-sm"  name="reject">
+                        レビュー投稿
+                    </button>
+                {% else %}
+                    <a type="button" class="btn btn-outline-primary btn-sm" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#forfree-Modal-{{ user.pk }}">
+                        レビュー投稿
+                    </a>
+                {% endif %}
+            </form> 
+            <table border="1">
+                {% for tag in reviews %}
+                <tr><th>{{ tag.content }}</th></tr>
+                <tr><td>{{ tag.score }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include 'nagoyameshi/modal_for_free.html' %}
+{% endblock %}

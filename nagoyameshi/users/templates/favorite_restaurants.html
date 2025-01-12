@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}お気に入り店舗{% endblock %}
+{% block content %}
+
+<h1>お気に入り店舗</h1>
+{% for restaurant in object_list %}
+<a href="{% url 'restaurant_detail' restaurant.pk %}"><table border="1">
+    <tr><th>{{ restaurant.store_name }}</th></tr>
+    <tr><td>{{ restaurant.restaurants_id }}</td></tr>
+    <tr><td>{{ restaurant.store_description }}</td></tr>
+</table></a>
+{% endfor %}
+
+{# ページの表示 #}
+{{ page_obj.number }} / {{ page_obj.paginator.num_pages }} ページ<br>
+
+{# 前へ #}
+{% if page_obj.has_previous %}
+<a href="?page=1">&laquo; 先頭</a>
+<a href="?page={{ page_obj.previous_page_number }}">前へ</a>
+{% endif %}
+
+{# 次へ #}
+{% if page_obj.has_next %}
+<a href="?page={{ page_obj.next_page_number }}">次へ</a>
+<a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
+{% endif %}
+{% endblock %}
+

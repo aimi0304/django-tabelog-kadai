@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}登録完了{% endblock %}
+
+{% block content %}
+{% if result %}
+    <p>認証に成功しました。</p>
+    <p><a href={% url 'login' %}>ログイン</a></p>
+{% else %}
+    <p>無効なリンクです。</p>
+{% endif %}
+{% endblock %}

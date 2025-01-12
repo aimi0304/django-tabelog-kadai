@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+{% block title %}退会確認{% endblock %}
+
+{% block content %}
+<form role="form" method="post">
+    {% csrf_token %}
+    <p>あなたのアカウント「@{{ user.username }}」を、本当に削除してもよろしいですか？</p>
+
+    <button type="submit" class="button is-danger">削除</button>
+    <a href="javascript:void(0);" onclick="window.history.back();" class="button is-text">キャンセル</a>
+</form>
+{% endblock %}

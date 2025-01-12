@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}サブスクリプション解除結果{% endblock %}
+
+{% block content %}
+    <h1>サブスクリプション解除結果</h1>
+
+    {% if message %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <a href="{% url 'top' %}" class="btn btn-primary">ホームへ戻る</a>
+{% endblock %}
