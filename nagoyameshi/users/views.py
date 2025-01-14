@@ -96,11 +96,6 @@ class UserUpdateView(OnlyYouMixin, UpdateView):
         return resolve_url('mypage', pk=self.kwargs['pk'])
 
 
-# class save():
-    # セーブ用のビューが必要？　→UpdateViewでPOSTされている？
-    # OnlyYouMixinをloginrequiredに変更
-
-
 class UserUpgradeView(OnlyYouMixin, UpdateView):
     model = User
     form_class = UserUpgradeForm
@@ -135,30 +130,6 @@ class FavoriteRestaurantsView(LoginRequiredMixin, ListView):
         return queryset
 
 
-# class ReviewPostView(LoginRequiredMixin, UpdateView):
-#     model = Review
-#     form_class = ReviewPostForm
-#     template_name = 'review_post.html'
-
-#     @property
-#     def restaurant_id(self):
-#         return self.kwargs['restaurant']
-
-#     def get_object(self, queryset=None):
-#         # restaurant_id = self.kwargs['restaurant']
-#         # user_id = 
-        
-#         # Reviewオブジェクトを特定するためのロジック
-#         # ここでは、restaurantとuserに基づいてReviewオブジェクトを取得する
-#         favorite, created = Review.objects.get_or_create(
-#             user_id=self.request.user.id,
-#             restaurants_id=self.restaurant_id
-#         )
-#         return HttpResponseRedirect(self.get_success_url())
-#         # return favorite
-    
-#     def get_success_url(self):
-#         return resolve_url('restaurant_detail', pk=self.restaurant_id)
 class ReviewPostView(LoginRequiredMixin, FormView):
     # レビュー投稿用のビュー
     model = Review
@@ -191,7 +162,6 @@ class ReviewPostView(LoginRequiredMixin, FormView):
             # 新しいレビューを作成
             form.instance.user_id = self.request.user
             form.instance.restaurants_id = get_object_or_404(Restaurant, pk=self.kwargs['pk'])
-        # return super().form_valid(form)
 
         # フォームを保存
         form.save()
@@ -206,17 +176,9 @@ class PostedListView(LoginRequiredMixin, ListView):
     model = Review
 
     def get_queryset(self):
-        # context['store_name'] = { 店舗名: [さいぜ、おこほん] }
-        # return context['store_name']
         queryset = Review.objects.filter(user_id=self.request.user)
-        # for i in queryset.value():
-        #     print(i)
-        return queryset
 
-    # 店舗名取得案
-    # Viewのdef get()で完全オリジナルで作成
-    # ※モデルの処理も自作　　　　　↓辞書化(インデックスよりキーのほうが取得しやすいため)
-    # 二次元リストを作成[[content→レビュー内容, name→店舗名], [レビュー内容, 店舗名], [レビュー内容, 店舗名]]
+        return queryset
 
 
 class DeleteView(TemplateView):

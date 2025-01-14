@@ -18,6 +18,7 @@ class TopView(TemplateView):
 class RestaulantSearchView(ListView):
     template_name = 'nagoyameshi/restaurant_list.html'
     model = Restaurant
+    pagenate_by = 10
 
     def get_queryset(self):
         queryset = Restaurant.objects.order_by('-id')
