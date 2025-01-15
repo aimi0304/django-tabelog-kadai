@@ -51,7 +51,7 @@ class SignupView(CreateView):
 
         # メールを送信
         message = render_to_string('activation_email.html', {'activation_link': activation_link})
-        send_mail('アカウントの本登録をしてください', message, settings.DEFAULT_FROM_EMAIL, [user.email])
+        send_mail('アカウントの本登録をしてください', message, settings.DEFAULT_FROM_EMAIL, [self.object.email])
 
         return redirect(self.get_success_url())  # 成功したらリダイレクト
 
