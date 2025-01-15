@@ -28,6 +28,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 User = get_user_model()
@@ -44,13 +45,13 @@ class SignupView(CreateView):
         user = form.save()
 
         # メール認証のリンク作成
-        uid = urlsafe_base64_encode(user.pk.encode())
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
         activation_link = f"{self.request.scheme}://{get_current_site(self.request).domain}/accounts/activate/{uid}/{token}/"
 
         # メールを送信
         message = render_to_string('activation_email.html', {'activation_link': activation_link})
-        send_mail('アカウントの本登録をしてください', message, 'from@example.com', [user.email])
+        send_mail('アカウントの本登録をしてください', message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
         return redirect(self.get_success_url())  # 成功したらリダイレクト
 
