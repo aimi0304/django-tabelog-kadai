@@ -24,7 +24,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/profile/', nagoya_views.TopView.as_view(), name="top"),
+    path('', nagoya_views.TopView.as_view(), name="top"),
     path('login/', users_views.LoginView.as_view(), name="login"),
     path('logout/', users_views.LogoutView.as_view(), name="logout"),
     path('nagoyameshi/', nagoya_views.RestaulantSearchView.as_view(), name="search_result"),
