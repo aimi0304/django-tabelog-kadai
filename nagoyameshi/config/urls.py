@@ -24,12 +24,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', nagoya_views.TopView.as_view(), name="top"),
+    path('accounts/profile/', nagoya_views.TopView.as_view(), name="top"),
     path('login/', users_views.LoginView.as_view(), name="login"),
     path('logout/', users_views.LogoutView.as_view(), name="logout"),
     path('nagoyameshi/', nagoya_views.RestaulantSearchView.as_view(), name="search_result"),
     path('signup/', users_views.SignupView.as_view(), name="signup"),
-    path('activate/<uid64>/<token>/', users_views.ActivateView.as_view(), name="activate"),
+    path('accounts/activate/<uidb64>/<token>/', users_views.ActivateView.as_view(), name="activate"),
     path('password_reset/', users_views.PasswordReset.as_view(), name='password_reset'),
     path('password_reset/done/', users_views.PasswordResetDone.as_view(), name='password_reset_done'),
     path('password_reset/confirm/<uidb64>/<token>/', users_views.PasswordResetConfirm.as_view(), name='password_reset_confirm'),
