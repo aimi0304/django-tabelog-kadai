@@ -142,8 +142,6 @@ MEDIA_ROOT = BASE_DIR / 'media_local'
 FRONTED_URL = "http://127.0.0.1:8000/"
 
 # Eメールでのアカウント本登録
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-<<<<<<< HEAD
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
