@@ -157,9 +157,9 @@ FRONTED_URL = "http://127.0.0.1:8000/"
 # SendGridを使用
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 # 送信元(ローカル)
-# DEFAULT_FROM_EMAIL = "sa.0304piyo@gmail.com"  # 任意のメールアドレス
+DEFAULT_FROM_EMAIL = "sa.0304piyo@gmail.com"  # 任意のメールアドレス
 # 送信元(本番)
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')  # 任意のメールアドレス
+# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')  # 任意のメールアドレス
 # SendGridのAPIキー(ローカル)
 
 # SendGridのAPIキー(本番)
