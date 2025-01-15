@@ -1,4 +1,3 @@
-import os
 from django.views.generic import (
     TemplateView, CreateView, DetailView, UpdateView, FormView,
     DeleteView, ListView, View
@@ -274,7 +273,7 @@ class StripeConfigView(View):
 # 支払い画面に遷移させるための処理
 class CreateCheckoutSessionView(View):
     def get(self, request, *args, **kwargs):
-        domain_url = os.environ.get("HOST")
+        domain_url = 'https://suzuki-nagoyameshi-3cf72cebd974.herokuapp.com/'
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             checkout_session = stripe.checkout.Session.create(
@@ -351,7 +350,7 @@ class UpdateCardView(View):
             stripe_customer = StripeCustomer.objects.get(user_id=request.user)
             billing_portal_session = stripe.billing_portal.Session.create(
                 customer=stripe_customer.stripe_customer_id,
-                return_url='http://localhost:8000/mypage/'  # カード情報編集後のリダイレクトURL
+                return_url='https://suzuki-nagoyameshi-3cf72cebd974.herokuapp.com/mypage/'  # カード情報編集後のリダイレクトURL
             )
             return HttpResponseRedirect(billing_portal_session.url)
             # return JsonResponse({'url': billing_portal_session.url})
@@ -370,31 +369,34 @@ class UpdateCardView(View):
 class CancelSubscriptionView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         try:
-            # ユーザーのStripeカスタマーIDを取得
             stripe_customer = StripeCustomer.objects.get(user_id=request.user)
         except StripeCustomer.DoesNotExist:
-            # ユーザーに対応するStripeCustomerが存在しない場合
-            cansel_result = messages.error(request, 'Stripe customer record not found.')
-            return render(request, 'cancel_subscription_result.html', {'message': cansel_result})
+            messages.error(request, 'Stripe customer record not found.')
+            return redirect('cancel_subscription_result')
 
-        customer_id = stripe_customer.stripe_customer_id
         subscription_id = stripe_customer.stripe_subscription_id
-
         if not subscription_id:
-            cansel_result = messages.error(request, 'No active subscription found.')
-            return render(request, 'cancel_subscription_result.html', {'message': cansel_result})
+            messages.error(request, 'No active subscription found.')
+            return redirect('cancel_subscription_result')
 
         try:
             # サブスクリプションをキャンセル
             stripe.Subscription.delete(subscription_id)
 
-            # サブスクリプションIDを削除（モデルで更新）
-            subscription = get_object_or_404(StripeCustomer, user_id=self.request.user, stripe_customer_id=customer_id)
-            subscription.delete()
+            # StripeCustomer レコードを削除
+            stripe_customer.delete()
 
-            cansel_result = messages.success(request, '有料会員を解除しました。引き続き無料会員としてNAGOYAMESHIをご利用ください。')
-            return render(request, 'cancel_subscription_result.html', {'message': cansel_result})
+            # ユーザーの無料会員化
+            user = request.user
+            user.is_premium = False  # フィールド名に合わせて変更
+            user.save()
 
+            messages.success(request, '有料会員を解除しました。引き続き無料会員としてNAGOYAMESHIをご利用ください。')
         except stripe.error.StripeError as e:
-            messages.error(request, str(e))
-            return render(request, 'cancel_subscription_result.html', {'message': f'Error: {str(e)}'})
+            messages.error(request, f'Subscription cancelation failed: {str(e)}')
+
+        return redirect('cancel_subscription_result')
+
+
+class CancelSubscriptionResultView(TemplateView):
+    template_name = 'cancel_subscription_result.html'
