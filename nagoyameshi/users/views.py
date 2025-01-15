@@ -1,3 +1,4 @@
+import os
 from django.views.generic import (
     TemplateView, CreateView, DetailView, UpdateView, FormView,
     DeleteView, ListView, View
@@ -273,7 +274,7 @@ class StripeConfigView(View):
 # 支払い画面に遷移させるための処理
 class CreateCheckoutSessionView(View):
     def get(self, request, *args, **kwargs):
-        domain_url = 'http://localhost:8000/'
+        domain_url = os.environ.get("HOST")
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             checkout_session = stripe.checkout.Session.create(
