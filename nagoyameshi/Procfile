@@ -1,1 +1,1 @@
-web: gunicorn nagoyameshi.wsgi 
+web: gunicorn config.wsgi:application
