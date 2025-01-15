@@ -27,8 +27,8 @@ SECRET_KEY = 'syc6*!g3^07jankkb%55qn$&a4s%lp8o56ftvg!96i9y64g22d'
 DEBUG = True
 
 # ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = [os.environ.get("HOST")]
-ALLOWED_HOSTS = ['suzuki-nagiyameshi-3cf72cebd974.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [os.environ.get("HOST")]
+# ALLOWED_HOSTS = ['suzuki-nagiyameshi-3cf72cebd974.herokuapp.com', 'localhost', '127.0.0.1']
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.herokuapp.com']
 # ALLOWED_HOSTS = [os.environ.get("HOST", 'suzuki-nagoyameshi-3cf72cebd974.herokuapp.com')]
 
