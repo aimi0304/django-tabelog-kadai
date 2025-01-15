@@ -6,17 +6,16 @@
 
 {% block content %}
 <h1>マイページ</h1>
+<p>あなたは
+    {% if user.is_premium %}
+        有料会員
+    {% else %}
+        無料会員
+    {% endif %}
+    です
+</p>
 
 <div class="mypage">
-    <p>あなたは
-        {% if user.is_premium %}
-            有料会員
-        {% else %}
-            無料会員
-        {% endif %}
-        です
-    </p>
-    <br>
     <table class="table">
         <tbody>
             <tr>
@@ -47,73 +46,46 @@
     </table>
 
     <div class="user-action">
-        <form action="{% url 'user_update' user.pk %}" method="get">
-            {% csrf_token %}
-            <input class="nav-link" type="submit" value="会員情報更新">
-        </form>
-        <form action="{% url 'user_upgrade' user.pk %}" method="get">
-            {% csrf_token %}
-            <input class="nav-link" type="submit" value="有料会員になる">
-        </form>
-        <form action="{% url 'favorite_restaurants' user.pk %}" method="get">
-            {% csrf_token %}
-            {% if user.is_premium %}
-                <button type="submit" class="btn btn-outline-primary btn-sm">
-                    お気に入り店舗
-                </button>
-            {% else %}
-                <a type="button" class="btn btn-outline-primary btn-sm" 
-                data-bs-toggle="modal" 
-                data-bs-target="#forfree-Modal-{{ user.pk }}">
-                    お気に入り店舗
-                </a>
-            {% endif %}
-        </form> 
-        <form action="{% url 'posted_list' user.pk %}" method="get">
-            {% csrf_token %}
-            {% if user.is_premium %}
-                <button type="submit" class="btn btn-outline-primary btn-sm">
-                    投稿したレビュー
-                </button>
-            {% else %}
-                <a type="button" class="btn btn-outline-primary btn-sm" 
-                data-bs-toggle="modal" 
-                data-bs-target="#forfree-Modal-{{ user.pk }}">
-                投稿したレビュー
-                </a>
-            {% endif %}
-        </form> 
-        <form action="{% url 'reserved_list' user.pk %}" method="get">
-            {% csrf_token %}
-            {% if user.is_premium %}
-                <button type="submit" class="btn btn-outline-primary btn-sm">
-                    予約一覧
-                </button>
-            {% else %}
-                <a type="button" class="btn btn-outline-primary btn-sm" 
-                data-bs-toggle="modal" 
-                data-bs-target="#forfree-Modal-{{ user.pk }}">
-                予約一覧
-                </a>
-            {% endif %}
-        </form> 
-        <form action="{% url 'user_delete' user.pk %}" method="get">
-            {% csrf_token %}
-            <input class="nav-link" type="submit" value="退会">
-        </form>
-        <script src="https://js.stripe.com/v3/"></script>  <!-- new -->
-        <script src="{% static "subscription/js/main.js" %}"></script> <!-- new -->
-        <div class="container mt-5">
-            <button type="submit" class="btn btn-primary" id="checkout">サブスク</button>
+        <div>
+            {% comment %} 全会員さま向け {% endcomment %}
+            <a href="{% url 'user_update' user.pk %}">☛会員情報更新</a>
+            <br>
+            <a href="{% url 'user_delete' user.pk %}">☛退会する</a>
         </div>
-        <form action="{% url 'update_card' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">カード情報の編集</button>
-        </form>
-        <form action="{% url 'cancel_subscription' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">サブスク解除</button>
-        </form>
+        <div>
+        {% comment %} 有料会員さま向け {% endcomment %}
+            {% if user.is_premium %}
+                <form action="{% url 'favorite_restaurants' user.pk %}" method="get">
+                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                        お気に入り店舗
+                    </button>
+                </form>
+                <form action="{% url 'posted_list' user.pk %}" method="get">
+                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                        投稿したレビュー
+                    </button>
+                </form>
+                <form action="{% url 'reserved_list' user.pk %}" method="get">
+                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                        予約一覧
+                    </button>
+                </form>
+                <script src="https://js.stripe.com/v3/"></script>  <!-- new -->
+                <script src="{% static "subscription/js/main.js" %}"></script> <!-- new -->
+                <form action="{% url 'update_card' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary">カード情報の編集</button>
+                </form>
+                <form action="{% url 'cancel_subscription' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary">無料会員になる</button>
+                </form>
+            {% else %}
+            <a type="button" href="{% url 'user_upgrade' user.pk %}">
+            ☛有料会員になる
+            </a>
+            {% endif %}
+        </div>
     </div>
 </div>
 

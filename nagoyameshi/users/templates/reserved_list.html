@@ -7,37 +7,24 @@
 <h1>予約一覧</h1>
 {% for reservation in object_list %}
 <table border="1">
-    <tr><th>{{ reservation.restaurant_id }}</th></tr>
-    <tr><td>{{ reservation.reserved_datetime }}</td></tr>
-    <tr><td>{{ reservation.number_of_people }}</td></tr>
-
+    <tbody>
+        <tr>
+            <th>日付</th>
+            <td>{{ reservation.reserved_datetime }}</td>
+        </tr>
+        <tr>
+            <th>来店人数</th>
+            <td>{{ reservation.number_of_people }}</td>
+        </tr>
+    </tbody>
     <form method="post">
+        {% csrf_token %}
         <a type="button" class="btn btn-outline-primary btn-sm" 
         data-bs-toggle="modal" 
         data-bs-target="#delete-Modal-{{ reservation.id }}">キャンセル</a>
     </form>
-
+    {% include 'cancel_reservation.html' with reservation=reservation %}
 </table>
 {% endfor %}
-
-{# 各レビューごとにモーダルを表示するためのループ #}
-{% for reservation in object_list %}
-    {% include 'cancel_reservation.html' with reservation=reservation %}
-{% endfor %}
-
-{# ページの表示 #}
-{{ page_obj.number }} / {{ page_obj.paginator.num_pages }} ページ<br>
-
-{# 前へ #}
-{% if page_obj.has_previous %}
-<a href="?page=1">&laquo; 先頭</a>
-<a href="?page={{ page_obj.previous_page_number }}">前へ</a>
-{% endif %}
-
-{# 次へ #}
-{% if page_obj.has_next %}
-<a href="?page={{ page_obj.next_page_number }}">次へ</a>
-<a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
-{% endif %}
 
 {% endblock %}

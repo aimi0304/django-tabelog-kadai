@@ -54,6 +54,7 @@ urlpatterns = [
     path('cancel-subscription/', users_views.CancelSubscriptionView.as_view(), name='cancel_subscription'),
     path('webhook/', users_views.StripeWebhookView.as_view(), name='stripe-webhook'),
     path('update_card/', users_views.UpdateCardView.as_view(), name='update_card'),
+    path('user_upgrade_success/<int:pk>/', users_views.UpdaUserUpgradeSuccess.as_view(), name='user_upgrade_success'),
 ]
 
 if settings.DEBUG:

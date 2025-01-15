@@ -125,8 +125,26 @@
                     {% endif %}
                 </form> 
                     {% for tag in reviews %}
-                    <tr><th>{{ tag.content }}</th></tr>
-                    <tr><td>{{ tag.score }}</td></tr>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>スコア</th>
+                                <td>{{ tag.score }}</td>
+                            </tr>
+                            <tr>
+                                <th>来店人数</th>
+                                <td>{{ tag.number_of_people }}</td>
+                            </tr>
+                            <tr>
+                                <th>目的</th>
+                                <td>{{ tag.purpose }}</td>
+                            </tr>
+                            <tr>
+                                <th>口コミ</th>
+                                <td>{{ tag.content }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                     {% endfor %}
             </div>
         </div>

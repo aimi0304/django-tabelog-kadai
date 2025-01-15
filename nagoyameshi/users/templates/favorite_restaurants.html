@@ -6,26 +6,23 @@
 
 <h1>お気に入り店舗</h1>
 {% for restaurant in object_list %}
-<a href="{% url 'restaurant_detail' restaurant.pk %}"><table border="1">
-    <tr><th>{{ restaurant.store_name }}</th></tr>
-    <tr><td>{{ restaurant.restaurants_id }}</td></tr>
-    <tr><td>{{ restaurant.store_description }}</td></tr>
-</table></a>
+<div class="flex">
+    <figure class="image"><img src="{{ restaurant.store_image.url }}" alt=""></figure>
+    <div class="right">
+        <div>
+            <h3 class=name>
+                <a class=storename href="{% url 'restaurant_detail' restaurant.pk%}">{{ restaurant.store_name }}</a>
+            </h3>
+        </div>
+        <div>
+            <p class="text">{{ restaurant.store_description }}</p>
+        </div>
+        <div>
+            <p class="price">￥{{ restaurant.lowest_price }}～ {{ restaurant.hightest_price }}</p>
+        </div>
+    </div>
+</div>
+<hr>
 {% endfor %}
-
-{# ページの表示 #}
-{{ page_obj.number }} / {{ page_obj.paginator.num_pages }} ページ<br>
-
-{# 前へ #}
-{% if page_obj.has_previous %}
-<a href="?page=1">&laquo; 先頭</a>
-<a href="?page={{ page_obj.previous_page_number }}">前へ</a>
-{% endif %}
-
-{# 次へ #}
-{% if page_obj.has_next %}
-<a href="?page={{ page_obj.next_page_number }}">次へ</a>
-<a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
-{% endif %}
 {% endblock %}
 

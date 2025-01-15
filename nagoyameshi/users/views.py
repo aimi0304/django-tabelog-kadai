@@ -101,13 +101,17 @@ class UserUpgradeView(OnlyYouMixin, UpdateView):
     form_class = UserUpgradeForm
     template_name = 'user_upgrade.html'
 
-    def get_success_url(self):
-        return resolve_url('mypage', pk=self.kwargs['pk'])
+    def form_valid(self, form):
+        form.instance.is_premium = True  # 明示的に is_premium を True に設定
+        self.object = form.save()  # フォームデータを保存
+        return super().form_valid(form)
 
-    def get_initial(self):
-        initial = super().get_initial()
-        initial['is_premium'] = True
-        return initial
+    def get_success_url(self):
+        return resolve_url('user_upgrade_success', pk=self.kwargs['pk'])
+
+
+class UpdaUserUpgradeSuccess(LoginRequiredMixin, TemplateView):
+    template_name = "user_upgrade_success.html"
 
 
 class UserDeleteView(OnlyYouMixin, DeleteView):
@@ -144,6 +148,8 @@ class ReviewPostView(LoginRequiredMixin, FormView):
         if review:
             initial['content'] = review.content
             initial['score'] = review.score
+            initial['purpose'] = review.purpose
+            initial['number_of_people'] = review.number_of_people
         return initial
 
     def get_review(self):
@@ -158,6 +164,10 @@ class ReviewPostView(LoginRequiredMixin, FormView):
         if review:
             # 既存のレビューを更新
             form.instance = review
+            form.instance.content = form.cleaned_data.get('content')
+            form.instance.score = form.cleaned_data.get('score')
+            form.instance.purpose = form.cleaned_data.get('purpose')
+            form.instance.number_of_people = form.cleaned_data.get('number_of_people')
         else:
             # 新しいレビューを作成
             form.instance.user_id = self.request.user
@@ -326,17 +336,15 @@ class CancelSubscriptionView(LoginRequiredMixin, View):
             stripe_customer = StripeCustomer.objects.get(user_id=request.user)
         except StripeCustomer.DoesNotExist:
             # ユーザーに対応するStripeCustomerが存在しない場合
-            # return JsonResponse({'error': 'Stripe customer record not found'}, status=404)
-            messages.error(request, 'Stripe customer record not found.')
-            return render(request, 'cancel_subscription_result.html', {'message': 'Stripe customer record not found.'})
+            cansel_result = messages.error(request, 'Stripe customer record not found.')
+            return render(request, 'cancel_subscription_result.html', {'message': cansel_result})
 
         customer_id = stripe_customer.stripe_customer_id
         subscription_id = stripe_customer.stripe_subscription_id
 
         if not subscription_id:
-            # return JsonResponse({'error': 'No active subscription found'}, status=404)
-            messages.error(request, 'No active subscription found.')
-            return render(request, 'cancel_subscription_result.html', {'message': 'No active subscription found.'})
+            cansel_result = messages.error(request, 'No active subscription found.')
+            return render(request, 'cancel_subscription_result.html', {'message': cansel_result})
 
         try:
             # サブスクリプションをキャンセル
@@ -346,11 +354,9 @@ class CancelSubscriptionView(LoginRequiredMixin, View):
             subscription = get_object_or_404(StripeCustomer, user_id=self.request.user, stripe_customer_id=customer_id)
             subscription.delete()
 
-            # return JsonResponse({'message': 'Subscription canceled successfully'}, status=200)
-            messages.success(request, 'Subscription canceled successfully.')
-            return render(request, 'cancel_subscription_result.html', {'message': 'Subscription canceled successfully.'})
+            cansel_result = messages.success(request, '有料会員を解除しました。引き続き無料会員としてNAGOYAMESHIをご利用ください。')
+            return render(request, 'cancel_subscription_result.html', {'message': cansel_result})
 
         except stripe.error.StripeError as e:
-            # return JsonResponse({'error': str(e)}, status=400)
             messages.error(request, str(e))
             return render(request, 'cancel_subscription_result.html', {'message': f'Error: {str(e)}'})

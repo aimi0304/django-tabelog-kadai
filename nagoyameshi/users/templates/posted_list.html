@@ -7,41 +7,34 @@
 <h1>投稿レビュー</h1>
 {% for review in object_list %}
 <table border="1">
-    <tr><th>{{ review.restaurants_id }}</th></tr>
-    <tr><td>{{ review.content }}</td></tr>
-    <tr><td>{{ review.score }}</td></tr>
-    <tr><td>{{ review.id }}</td></tr>
-    <tr><td>{{ review.restaurants_id_id }}</td></tr>
+    <tbody>
+        <tr>
+            <th>スコア</th>
+            <td>{{ review.score }}</td>
+        </tr>
+        <tr>
+            <th>来店人数</th>
+            <td>{{ review.number_of_people }}</td>
+        </tr>
+        <tr>
+            <th>目的</th>
+            <td>{{ review.purpose }}</td>
+        </tr>
+        <tr>
+            <th>口コミ</th>
+            <td>{{ review.content }}</td>
+        </tr>
+    </tbody>
     <form method="post">
+        {% csrf_token %}
         <a type="button" class="btn btn-outline-primary btn-sm" 
         data-bs-toggle="modal" 
         data-bs-target="#delete-Modal-{{ review.id }}">削除</a>
     </form>
     <form action="{% url 'review_post' review.restaurants_id_id %}" method="get">
         {% csrf_token %}
-        <button type="submit">編集</button>
+        <button type="submit" class="btn btn-outline-primary">編集</button>
     </fotm>
 </table>
 {% endfor %}
-
-{# 各レビューごとにモーダルを表示するためのループ #}
-{% for review in object_list %}
-    {% include 'delete_review.html' with review=review %}
-{% endfor %}
-
-{# ページの表示 #}
-{{ page_obj.number }} / {{ page_obj.paginator.num_pages }} ページ<br>
-
-{# 前へ #}
-{% if page_obj.has_previous %}
-<a href="?page=1">&laquo; 先頭</a>
-<a href="?page={{ page_obj.previous_page_number }}">前へ</a>
-{% endif %}
-
-{# 次へ #}
-{% if page_obj.has_next %}
-<a href="?page={{ page_obj.next_page_number }}">次へ</a>
-<a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
-{% endif %}
-
 {% endblock %}

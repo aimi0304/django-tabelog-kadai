@@ -65,6 +65,7 @@
 
 /* mypage */
 .mypage {
-    margin: auto 200px;
+    display: flex;
+    margin: auto 10%;
     padding: 0;
 }
