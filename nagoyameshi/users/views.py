@@ -24,6 +24,10 @@ import stripe
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 User = get_user_model()
@@ -32,16 +36,43 @@ User = get_user_model()
 class SignupView(CreateView):
     form_class = SignUpForm
     template_name = "signup.html"
-    success_url = reverse_lazy("top")
-    send_mail('Subject here', 'Here is the message.', 'nagoyameshi@co.jp', ['aimi.suzuki@outlook.jp'], fail_silently=False)
+    # success_url = reverse_lazy("top")
+    success_url = reverse_lazy('top')  # メール確認のページへリダイレクト
+
+    def form_valid(self, form):
+        # ユーザーを作成
+        user = form.save()
+
+        # メール認証のリンク作成
+        uid = urlsafe_base64_encode(user.pk.encode())
+        token = default_token_generator.make_token(user)
+        activation_link = f"{self.request.scheme}://{get_current_site(self.request).domain}/accounts/activate/{uid}/{token}/"
+
+        # メールを送信
+        message = render_to_string('activation_email.html', {'activation_link': activation_link})
+        send_mail('アカウントの本登録をしてください', message, 'from@example.com', [user.email])
+
+        return redirect(self.get_success_url())  # 成功したらリダイレクト
 
 
-class ActivateView(TemplateView):
-    template_name = "activate.html"
+class ActivateView(View):
+    # template_name = "activate.html"
 
-    def get(self, request, uid64, token, *args, **kwargs):
-        result = activate_user(uid64, token)
-        return super().get(request, result=result, **kwargs)
+    def get(self, request, uidb64, token):
+        # result = activate_user(uid64, token)
+        # return super().get(request, result=result, **kwargs)
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+            if default_token_generator.check_token(user, token):
+                user.is_active = True
+                user.save()
+                return redirect('activate', user.is_active)  # 成功したらログインページへ
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        
+        # トークンが無効の場合
+        return redirect('activate', user.is_active)
 
 
 class LoginView(LoginView):
