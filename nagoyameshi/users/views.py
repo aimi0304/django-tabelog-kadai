@@ -52,8 +52,13 @@ class SignupView(CreateView):
 
         # メールを送信
         try:
-            message = render_to_string('activation_email.html', {'activation_link': activation_link})
-            send_mail('アカウントの本登録をしてください', message, settings.DEFAULT_FROM_EMAIL, [user.email])
+            message_template = """
+                NAGOYAMESHIのご登録ありがとうございます。
+                以下のURLをクリックして登録完了してください。
+
+                """
+            message = message_template + activation_link
+            send_mail('本登録をお願いします', message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False,)
         except Exception as e:
             raise ValidationError(f"メール送信エラー: {e}")
         return redirect(self.get_success_url())  # 成功したらリダイレクト

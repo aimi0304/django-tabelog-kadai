@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'syc6*!g3^07jankkb%55qn$&a4s%lp8o56ftvg!96i9y64g22d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = [os.environ.get("HOST")]
@@ -143,31 +143,12 @@ FRONTED_URL = "http://127.0.0.1:8000/"
 
 # Eメールでのアカウント本登録
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = "smtp.gmail.com"
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'sa.0304piyo@gmail.com'
-# EMAIL_HOST_PASSWORD = 'a9i9m3i4'
-# EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')  # Herokuの環境変数
-
-# print('デバッグ', EMAIL_HOST_PASSWORD)
-# DEFAULT_FROM_EMAIL = "aimi.suzuki@outlook.jp"  # 任意のメールアドレス
-
-# SendGridを使用
-EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
-# 送信元(ローカル)
-# DEFAULT_FROM_EMAIL = "sa.0304piyo@gmail.com"  # 任意のメールアドレス
-# 送信元(本番)
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')  # 任意のメールアドレス
-# SendGridのAPIキー(ローカル)
-
-# SendGridのAPIキー(本番)
-SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
-SENDGRID_ECHO_TO_STDOUT = True
-
-# 実際にメール送信
-SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sa.0304piyo@gmail.com'
+EMAIL_HOST_PASSWORD = 'uert ptmo yivg olou'
 
 
 # 決済機能
@@ -175,7 +156,3 @@ STRIPE_PUBLIC_KEY = "pk_test_51Qg2iYDLLsCJxWoZRgyyRJQizmjxu9a6DfzPqiBrUj0V2VK2yo
 STRIPE_SECRET_KEY = "sk_test_51Qg2iYDLLsCJxWoZXotY4EEPzbtHKMgBaVN2TNFSqV3XC2QiyLgL4kvAjKJDODIVBaVJlrRqET6C1Hzb3hB7woDi00MtjzKzw4" # シークレットキーキー
 STRIPE_PRICE_ID         = "price_1Qg2lGDLLsCJxWoZ5Ke8Ey5f" # API_ID
 STRIPE_WEBHOOK_SECRET = "whsec_2e76be2e47987364a24fa252ebb28fe6dd08e2529fcb35e7ccb54c3bb90c9ad7"
-# STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
-# STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
-# STRIPE_PRICE_ID = os.environ.get('STRIPE_PRICE_ID')
-# STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
