@@ -4,6 +4,9 @@ charset-normalizer==3.4.1
 Django==5.1.4
 django-bootstrap-form==3.4
 django-bootstrap5==24.3
+django-environ==0.12.0
+django-sendgrid==1.0.1
+django-sendgrid-v5==1.2.4
 gunicorn==23.0.0
 idna==3.10
 packaging==24.2
