@@ -168,6 +168,7 @@ class ReviewPostView(LoginRequiredMixin, FormView):
             form.instance.score = form.cleaned_data.get('score')
             form.instance.purpose = form.cleaned_data.get('purpose')
             form.instance.number_of_people = form.cleaned_data.get('number_of_people')
+
         else:
             # 新しいレビューを作成
             form.instance.user_id = self.request.user
