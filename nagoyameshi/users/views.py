@@ -29,6 +29,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
+from django.core.exceptions import ValidationError
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 User = get_user_model()
@@ -37,12 +38,12 @@ User = get_user_model()
 class SignupView(CreateView):
     form_class = SignUpForm
     template_name = "signup.html"
-    # success_url = reverse_lazy("top")
     success_url = reverse_lazy('top')  # メール確認のページへリダイレクト
 
     def form_valid(self, form):
         # ユーザーを作成
         user = form.save()
+        self.object = user  # 明示的にself.objectを設定
 
         # メール認証のリンク作成
         uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -50,9 +51,11 @@ class SignupView(CreateView):
         activation_link = f"{self.request.scheme}://{get_current_site(self.request).domain}/accounts/activate/{uid}/{token}/"
 
         # メールを送信
-        message = render_to_string('activation_email.html', {'activation_link': activation_link})
-        send_mail('アカウントの本登録をしてください', message, settings.DEFAULT_FROM_EMAIL, [self.object.email])
-
+        try:
+            message = render_to_string('activation_email.html', {'activation_link': activation_link})
+            send_mail('アカウントの本登録をしてください', message, settings.DEFAULT_FROM_EMAIL, [user.email])
+        except Exception as e:
+            raise ValidationError(f"メール送信エラー: {e}")
         return redirect(self.get_success_url())  # 成功したらリダイレクト
 
 

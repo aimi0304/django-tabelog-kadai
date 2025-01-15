@@ -150,6 +150,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "apikey"  # SendGrid APIキーの場合
 EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')  # Herokuの環境変数
+print('デバッグ', EMAIL_HOST_PASSWORD)
 DEFAULT_FROM_EMAIL = "aimi.suzuki@outlook.jp"  # 任意のメールアドレス
 
 # 決済機能
