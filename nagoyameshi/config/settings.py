@@ -144,11 +144,12 @@ FRONTED_URL = "http://127.0.0.1:8000/"
 # Eメールでのアカウント本登録
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = "smtp.sendgrid.net"
+# EMAIL_HOST = "smtp.gmail.com"
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = "apikey"  # SendGrid APIキーの場合
-# # EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')  # Herokuの環境変数
+# EMAIL_HOST_USER = 'sa.0304piyo@gmail.com'
+# EMAIL_HOST_PASSWORD = 'a9i9m3i4'
+# EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')  # Herokuの環境変数
 
 # print('デバッグ', EMAIL_HOST_PASSWORD)
 # DEFAULT_FROM_EMAIL = "aimi.suzuki@outlook.jp"  # 任意のメールアドレス
@@ -156,9 +157,9 @@ FRONTED_URL = "http://127.0.0.1:8000/"
 # SendGridを使用
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 # 送信元(ローカル)
-DEFAULT_FROM_EMAIL = "aimi.suzuki@outlook.jp"  # 任意のメールアドレス
+# DEFAULT_FROM_EMAIL = "sa.0304piyo@gmail.com"  # 任意のメールアドレス
 # 送信元(本番)
-# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')  # 任意のメールアドレス
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')  # 任意のメールアドレス
 # SendGridのAPIキー(ローカル)
 
 # SendGridのAPIキー(本番)
