@@ -23,6 +23,7 @@ from django.conf import settings
 import stripe
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.core.mail import send_mail
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 User = get_user_model()
@@ -32,6 +33,7 @@ class SignupView(CreateView):
     form_class = SignUpForm
     template_name = "signup.html"
     success_url = reverse_lazy("top")
+    send_mail('Subject here', 'Here is the message.', 'nagoyameshi@co.jp', ['aimi.suzuki@outlook.jp'], fail_silently=False)
 
 
 class ActivateView(TemplateView):
