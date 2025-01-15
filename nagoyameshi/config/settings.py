@@ -143,6 +143,7 @@ FRONTED_URL = "http://127.0.0.1:8000/"
 
 # Eメールでのアカウント本登録
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+<<<<<<< HEAD
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
@@ -154,5 +155,5 @@ EMAIL_HOST_PASSWORD = 'uert ptmo yivg olou'
 # 決済機能
 STRIPE_PUBLIC_KEY = "pk_test_51Qg2iYDLLsCJxWoZRgyyRJQizmjxu9a6DfzPqiBrUj0V2VK2yo8YJfdMoqFprSnPygOkY4r4xw20VIUeJU5BPkUw00dVTbpIMK" # 公開キー
 STRIPE_SECRET_KEY = "sk_test_51Qg2iYDLLsCJxWoZXotY4EEPzbtHKMgBaVN2TNFSqV3XC2QiyLgL4kvAjKJDODIVBaVJlrRqET6C1Hzb3hB7woDi00MtjzKzw4" # シークレットキーキー
-STRIPE_PRICE_ID         = "price_1Qg2lGDLLsCJxWoZ5Ke8Ey5f" # API_ID
-STRIPE_WEBHOOK_SECRET = "whsec_2e76be2e47987364a24fa252ebb28fe6dd08e2529fcb35e7ccb54c3bb90c9ad7"
+STRIPE_PRICE_ID = "price_1Qg2lGDLLsCJxWoZ5Ke8Ey5f" # API_ID
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
