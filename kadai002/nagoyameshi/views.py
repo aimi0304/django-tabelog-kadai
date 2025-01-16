@@ -54,10 +54,10 @@ class RestaurantDetail(DetailView):
 
             # お気に入り登録の有無
             context['is_favorite'] = Favorite.objects.filter(
-                user_id=self.user, restaurant_id=self.restaurant).exists()
+                user_id=user, restaurant_id=self.restaurant).exists()
 
             # プレミアムユーザーかどうか
-            context['is_premium'] = self.user.is_premium
+            context['is_premium'] = user.is_premium
 
         else:
             context['is_favorite'] = False
@@ -67,10 +67,11 @@ class RestaurantDetail(DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        user = self.request.user
 
         # お気に入りの削除または登録
         favorite, created = Favorite.objects.get_or_create(
-            user_id=self.user,
+            user_id=user,
             restaurant_id=self.object
         )
 
