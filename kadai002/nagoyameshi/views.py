@@ -37,11 +37,6 @@ class RestaurantDetail(DetailView):
     template_name = 'nagoyameshi/restaurant_detail.html'
     model = Restaurant
 
-    # @property
-    # def user(self):
-    #     print(self.request.user)
-    #     return self.request.user
-
     @property
     def restaurant(self):
         return self.get_object()
