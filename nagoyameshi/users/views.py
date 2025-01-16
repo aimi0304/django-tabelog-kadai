@@ -281,7 +281,7 @@ class StripeConfigView(View):
 # 支払い画面に遷移させるための処理
 class CreateCheckoutSessionView(View):
     def get(self, request, *args, **kwargs):
-        domain_url = 'https://suzuki-nagoyameshi-3cf72cebd974.herokuapp.com'
+        domain_url = 'https://suzuki-nagoyameshi-3cf72cebd974.herokuapp.com/'
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             checkout_session = stripe.checkout.Session.create(
@@ -330,7 +330,6 @@ class StripeWebhookView(View):
 
         # checkout.session.completed イベントをリッスン
         if event['type'] == 'checkout.session.completed':
-            print('支払い成功')
             session = event['data']['object']
             customer_id = session.get('customer')
             subscription_id = session.get('subscription')
