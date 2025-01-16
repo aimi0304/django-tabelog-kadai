@@ -6,10 +6,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        {% comment %} <div class="modal-body">
-          <p>有料会員になると気になる店舗をお気に入りに登録できます。
-        </div> {% endcomment %}
-
         <div class="modal-footer">
             <form method="get" action="{% url 'user_upgrade' user.pk %}">
             {% csrf_token %}

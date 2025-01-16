@@ -7,38 +7,48 @@
     <div class="top-info">
         <h3>{{ restaurant.store_name }}</h3>
 
-        <!-- お気に入りボタン -->
-        <form method="post">
+        {% if is_login %}
+            <!-- お気に入りボタン -->
+            <form method="post">
             {% csrf_token %}
-            {% if user.is_premium %}
-                <button type="submit" class="btn btn-outline-primary btn-sm">
-                    {% if is_favorite %}
-                        お気に入り登録済み
-                    {% else %}
-                        お気に入り登録
-                    {% endif %}
-                </button>
-            {% else %}
-                <a type="button" class="btn btn-outline-primary btn-sm" 
-                data-bs-toggle="modal" 
-                data-bs-target="#forfree-Modal-{{ user.pk }}">お気に入り登録</a>
-            {% endif %}
-        </form>
+                {% if user.is_premium %}
+                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                        {% if is_favorite %}
+                            お気に入り登録済み
+                        {% else %}
+                            お気に入り登録
+                        {% endif %}
+                    </button>
+                {% else %}
+                    <a type="button" class="btn btn-outline-primary btn-sm" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#forfree-Modal-{{ user.pk }}">お気に入り登録</a>
+                {% endif %}
+            </form>
+            <!-- 予約ボタン -->
+            <form action="{% url 'reservation' restaurant.pk %}" method="get">
+                {% if user.is_premium %}
+                    <button type="submit" class="btn btn-outline-primary btn-sm"  name="reserve">
+                        予約
+                    </button>
+                {% else %}
+                    <a type="button" class="btn btn-outline-primary btn-sm" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#forfree-Modal-{{ user.pk }}">
+                        予約
+                    </a>
+                {% endif %}
+            </form> 
 
-        <!-- 予約ボタン -->
-        <form action="{% url 'reservation' restaurant.pk %}" method="get">
-            {% if user.is_premium %}
-                <button type="submit" class="btn btn-outline-primary btn-sm"  name="reserve">
-                    予約
-                </button>
-            {% else %}
-                <a type="button" class="btn btn-outline-primary btn-sm" 
-                data-bs-toggle="modal" 
-                data-bs-target="#forfree-Modal-{{ user.pk }}">
-                    予約
-                </a>
-            {% endif %}
-        </form> 
+        {% else %}
+            <!-- お気に入りボタン -->
+            <a type="button" class="btn btn-outline-primary btn-sm" 
+            href="{% url 'login' %}">お気に入り登録</a>
+            <!-- 予約ボタン -->
+            <a type="button" class="btn btn-outline-primary btn-sm" 
+            href="{% url 'login' %}">予約</a>
+
+        {% endif %}
     </div>
 
     <div class="container mt-4">
@@ -111,6 +121,7 @@
             </div>
 
             <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+            {% if is_login %}
                 <form action="{% url 'review_post' restaurant.pk %}" method="get">
                     {% if user.is_premium %}
                         <button type="submit" class="btn btn-outline-primary btn-sm"  name="reject">
@@ -123,6 +134,11 @@
                         レビューを投稿する
                         </a>
                     {% endif %}
+            {% else %}
+                <a type="button" class="btn btn-outline-primary btn-sm" 
+                href="{% url 'login' %}">レビューを投稿する</a>
+            {% endif %}
+
                 </form> 
                     {% for tag in reviews %}
                     <table>
@@ -151,5 +167,8 @@
     </div>
 </div>
 
-{% include 'nagoyameshi/modal_for_free.html' %}
+{% if is_login %}
+    {% include 'nagoyameshi/modal_for_free.html' %}
+{% endif %}
+
 {% endblock %}

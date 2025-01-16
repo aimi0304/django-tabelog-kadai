@@ -37,9 +37,10 @@ class RestaurantDetail(DetailView):
     template_name = 'nagoyameshi/restaurant_detail.html'
     model = Restaurant
 
-    @property
-    def user(self):
-        return self.request.user
+    # @property
+    # def user(self):
+    #     print(self.request.user)
+    #     return self.request.user
 
     @property
     def restaurant(self):
@@ -47,16 +48,25 @@ class RestaurantDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = self.request.user
 
         # レビュー表示
         context['reviews'] = self.object.restaurants_id.all()
+        context['is_login'] = user.is_authenticated
 
-        # お気に入り登録の有無
-        context['is_favorite'] = Favorite.objects.filter(
-            user_id=self.user, restaurant_id=self.restaurant).exists()
+        if user.is_authenticated:
+            # ログイン状態
 
-        # プレミアムユーザーかどうか
-        context['is_premium'] = self.user.is_premium
+            # お気に入り登録の有無
+            context['is_favorite'] = Favorite.objects.filter(
+                user_id=self.user, restaurant_id=self.restaurant).exists()
+
+            # プレミアムユーザーかどうか
+            context['is_premium'] = self.user.is_premium
+
+        else:
+            context['is_favorite'] = False
+            context['is_premium'] = False
 
         return context
 
