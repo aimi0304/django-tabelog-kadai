@@ -24,11 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'syc6*!g3^07jankkb%55qn$&a4s%lp8o56ftvg!96i9y64g22d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = [os.environ.get("HOST")]
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.herokuapp.com']
 
 # Application definition
 
@@ -155,3 +154,27 @@ STRIPE_PUBLIC_KEY = "pk_test_51Qg2iYDLLsCJxWoZRgyyRJQizmjxu9a6DfzPqiBrUj0V2VK2yo
 STRIPE_SECRET_KEY = "sk_test_51Qg2iYDLLsCJxWoZXotY4EEPzbtHKMgBaVN2TNFSqV3XC2QiyLgL4kvAjKJDODIVBaVJlrRqET6C1Hzb3hB7woDi00MtjzKzw4" # シークレットキーキー
 STRIPE_PRICE_ID = "price_1Qg2lGDLLsCJxWoZ5Ke8Ey5f" # API_ID
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'nagoyameshi': {  # 特定のアプリのログ出力
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

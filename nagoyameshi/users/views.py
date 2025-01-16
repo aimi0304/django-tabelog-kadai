@@ -30,6 +30,9 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.core.exceptions import ValidationError
+import logging
+
+logger = logging.getLogger(__name__)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 User = get_user_model()
@@ -278,7 +281,7 @@ class StripeConfigView(View):
 # 支払い画面に遷移させるための処理
 class CreateCheckoutSessionView(View):
     def get(self, request, *args, **kwargs):
-        domain_url = 'https://suzuki-nagoyameshi-3cf72cebd974.herokuapp.com/'
+        domain_url = 'https://suzuki-nagoyameshi-3cf72cebd974.herokuapp.com'
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             checkout_session = stripe.checkout.Session.create(
@@ -327,6 +330,7 @@ class StripeWebhookView(View):
 
         # checkout.session.completed イベントをリッスン
         if event['type'] == 'checkout.session.completed':
+            print('支払い成功')
             session = event['data']['object']
             customer_id = session.get('customer')
             subscription_id = session.get('subscription')
@@ -352,6 +356,7 @@ class UpdateCardView(View):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
         try:
+            logger.debug(f"User ID: {request.user.id}")
             stripe_customer = StripeCustomer.objects.get(user_id=request.user)
             billing_portal_session = stripe.billing_portal.Session.create(
                 customer=stripe_customer.stripe_customer_id,
@@ -360,10 +365,12 @@ class UpdateCardView(View):
             return HttpResponseRedirect(billing_portal_session.url)
             # return JsonResponse({'url': billing_portal_session.url})
         except StripeCustomer.DoesNotExist:
+            logger.error(f"StripeCustomer.DoesNotExist for user: {request.user.id}")
             messages.error(request, 'Stripe customer record not found.')
             return render(request, 'update_card.html', {'message': 'Stripe customer record not found.'})
             # return JsonResponse({'error': 'Stripe customer record not found'}, status=404)
         except Exception as e:
+            logger.error(f"Exception occurred: {str(e)}")
             messages.error(request, str(e))
             return render(request, 'update_card.html', {'message': f'Error: {str(e)}'})
             # return JsonResponse({'error': str(e)}, status=400)
