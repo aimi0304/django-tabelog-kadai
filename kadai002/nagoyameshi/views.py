@@ -26,8 +26,9 @@ class RestaulantSearchView(ListView):
 
         if keyword:
             queryset = queryset.filter(
-                            Q(store_name__icontains=keyword)
-            )
+                Q(store_name__icontains=keyword) |
+                Q(categoryrestaurant__categories_id__category_name__icontains=keyword)
+            ).distinct()
             messages.success(self.request, '「{}」の検索結果'.format(keyword))
 
         return queryset
