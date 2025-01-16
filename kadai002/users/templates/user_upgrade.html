@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap %}
+
+{% block title %}有料会員登録{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-6">
+        <br>
+        <h1>有料会員登録</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                {{ field.label }}
+                {{ field }}
+                {{ field.errors }}
+                <br>
+            {% endfor %}
+            <button type="submit">保存</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

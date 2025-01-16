@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}トップ画面{% endblock %}
+
+{% block content %}
+<h1>NAGOYAMESHI</h1>
+<div class="serch">
+    <div class="container nagoyameshi-container">
+        <h2 class="mb-3">キーワードから探す</h2>
+        <form method="GET" action="{% url 'search_result' %}" class="user-search-box">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="店舗名・エリア・カテゴリ" name="keyword">
+                <button type="submit" class="btn btn-primary text-white shadow-sm">検索</button> 
+            </div>               
+        </form>
+    </div>
+</div>
+{% endblock %}

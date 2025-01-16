@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{ restaurant.store_name }}{% endblock %}
+{% block content %}
+<div class="restaurant-detail">
+    <div class="top-info">
+        <h3>{{ restaurant.store_name }}</h3>
+
+        <!-- お気に入りボタン -->
+        <form method="post">
+            {% csrf_token %}
+            {% if user.is_premium %}
+                <button type="submit" class="btn btn-outline-primary btn-sm">
+                    {% if is_favorite %}
+                        お気に入り登録済み
+                    {% else %}
+                        お気に入り登録
+                    {% endif %}
+                </button>
+            {% else %}
+                <a type="button" class="btn btn-outline-primary btn-sm" 
+                data-bs-toggle="modal" 
+                data-bs-target="#forfree-Modal-{{ user.pk }}">お気に入り登録</a>
+            {% endif %}
+        </form>
+
+        <!-- 予約ボタン -->
+        <form action="{% url 'reservation' restaurant.pk %}" method="get">
+            {% if user.is_premium %}
+                <button type="submit" class="btn btn-outline-primary btn-sm"  name="reserve">
+                    予約
+                </button>
+            {% else %}
+                <a type="button" class="btn btn-outline-primary btn-sm" 
+                data-bs-toggle="modal" 
+                data-bs-target="#forfree-Modal-{{ user.pk }}">
+                    予約
+                </a>
+            {% endif %}
+        </form> 
+    </div>
+
+    <div class="container mt-4">
+        <!-- タブメニュー -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <div class="nav-tabset">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">
+                        店舗情報
+                    </button>
+                </li>
+            </div>
+            <div class="nav-tabset">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">
+                        評価
+                    </button>
+                </li>
+            </div>
+        </ul>
+
+        <!-- タブの内容 -->
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                <figure class="image"><img src="{{ restaurant.store_image.url }}" alt=""></figure>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>店名</th>
+                            <td><span>{{ restaurant.store_name }}</span></td>
+                        </tr>
+                        <tr>
+                            <th>アクセス</th>
+                            <td>{{ restaurant.access }}</td>
+                        </tr>
+                        <tr>
+                            <th>予算</th>
+                            <td>￥{{ restaurant.lowest_price }}～￥{{ restaurant.hightest_price }}</td>
+                        </tr>
+                        <tr>
+                            <th>営業時間</th>
+                            <td>{{ restaurant.opening_time }}～{{ restaurant.closing_time }}</td>
+                        </tr>
+                        <tr>
+                            <th>座席数</th>
+                            <td>{{ restaurant.seating_capacity }}席</td>
+                        </tr>
+                        <tr>
+                            <th>定休日</th>
+                            <td>
+                                {% if restaurant.closed_info == 1 %}
+                                    月曜日
+                                {% elif restaurant.closed_info == 2 %}
+                                    火曜日
+                                {% elif restaurant.closed_info == 3 %}
+                                    水曜日
+                                {% elif restaurant.closed_info == 4 %}
+                                    木曜日
+                                {% elif restaurant.closed_info == 5 %}
+                                    金曜日
+                                {% elif restaurant.closed_info == 6 %}
+                                    土曜日
+                                {% elif restaurant.closed_info == 7 %}
+                                    日曜日
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+                <form action="{% url 'review_post' restaurant.pk %}" method="get">
+                    {% if user.is_premium %}
+                        <button type="submit" class="btn btn-outline-primary btn-sm"  name="reject">
+                            レビューを投稿する
+                        </button>
+                    {% else %}
+                        <a type="button" class="btn btn-outline-primary btn-sm" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#forfree-Modal-{{ user.pk }}">
+                        レビューを投稿する
+                        </a>
+                    {% endif %}
+                </form> 
+                    {% for tag in reviews %}
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>スコア</th>
+                                <td>{{ tag.score }}</td>
+                            </tr>
+                            <tr>
+                                <th>来店人数</th>
+                                <td>{{ tag.number_of_people }}</td>
+                            </tr>
+                            <tr>
+                                <th>目的</th>
+                                <td>{{ tag.purpose }}</td>
+                            </tr>
+                            <tr>
+                                <th>口コミ</th>
+                                <td>{{ tag.content }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'nagoyameshi/modal_for_free.html' %}
+{% endblock %}
