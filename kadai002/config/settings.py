@@ -11,20 +11,24 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+import environ
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# プロジェクトのルートディレクトリを取得
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# .envファイルを読み込む
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-89_jdaz^^dh+*10hy^0tdm-qqipp^-fqey(04)f3)c4s@w5p8x'
-SECRET_KEY = 'syc6*!g3^07jankkb%55qn$&a4s%lp8o56ftvg!96i9y64g22d'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env.bool('DEBUG')
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = [os.environ.get("HOST")]
@@ -145,12 +149,12 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'sa.0304piyo@gmail.com'
-EMAIL_HOST_PASSWORD = 'uert ptmo yivg olou'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 
 # 決済機能
-STRIPE_PUBLIC_KEY = "pk_test_51Qg2iYDLLsCJxWoZRgyyRJQizmjxu9a6DfzPqiBrUj0V2VK2yo8YJfdMoqFprSnPygOkY4r4xw20VIUeJU5BPkUw00dVTbpIMK" # 公開キー
-STRIPE_SECRET_KEY = "sk_test_51Qg2iYDLLsCJxWoZXotY4EEPzbtHKMgBaVN2TNFSqV3XC2QiyLgL4kvAjKJDODIVBaVJlrRqET6C1Hzb3hB7woDi00MtjzKzw4" # シークレットキーキー
-STRIPE_PRICE_ID = "price_1Qg2lGDLLsCJxWoZ5Ke8Ey5f"
-STRIPE_WEBHOOK_SECRET = "whsec_qSQe9AgJbsxhKK7BdBLq0vvcyVZ0qvIg"
+STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_PRICE_ID = env('STRIPE_PRICE_ID')
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET')
