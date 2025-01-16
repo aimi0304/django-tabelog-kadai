@@ -153,28 +153,4 @@ EMAIL_HOST_PASSWORD = 'uert ptmo yivg olou'
 STRIPE_PUBLIC_KEY = "pk_test_51Qg2iYDLLsCJxWoZRgyyRJQizmjxu9a6DfzPqiBrUj0V2VK2yo8YJfdMoqFprSnPygOkY4r4xw20VIUeJU5BPkUw00dVTbpIMK" # 公開キー
 STRIPE_SECRET_KEY = "sk_test_51Qg2iYDLLsCJxWoZXotY4EEPzbtHKMgBaVN2TNFSqV3XC2QiyLgL4kvAjKJDODIVBaVJlrRqET6C1Hzb3hB7woDi00MtjzKzw4" # シークレットキーキー
 STRIPE_PRICE_ID = "price_1Qg2lGDLLsCJxWoZ5Ke8Ey5f" # API_ID
-STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'debug.log'),
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'nagoyameshi': {  # 特定のアプリのログ出力
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
+STRIPE_WEBHOOK_SECRET = "whsec_qSQe9AgJbsxhKK7BdBLq0vvcyVZ0qvIg"
