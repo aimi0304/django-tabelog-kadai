@@ -15,7 +15,7 @@ class Restaurant(models.Model):
     opening_time = models.TimeField(default="09:00:00", verbose_name='開店時間')
     closing_time = models.TimeField(default="21:00:00", verbose_name="閉店時間")
     closed_info = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='定休日')
-    seating_capacity = models.CharField(max_length=50, verbose_name='座席数')
+    seating_capacity = models.PositiveSmallIntegerField(verbose_name='座席数')
     created_at = models.DateTimeField(auto_now=True, verbose_name="作成日")
     updated_at = models.DateTimeField(auto_now_add=True, verbose_name="更新日")
 

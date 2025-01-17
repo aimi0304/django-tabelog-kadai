@@ -4,7 +4,7 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from django.db.models import Q
 from django.contrib import messages
 from django.shortcuts import resolve_url
-from django.http import  HttpResponseRedirect
+from django.http import  HttpResponseRedirect, HttpResponseBadRequest
 from .forms import ReservationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -95,15 +95,15 @@ class ReservationView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('reservation_completed')
 
     def form_valid(self, form):
-        # ログイン中のユーザーをuser_idに設定
         form.instance.user_id = self.request.user
-        
-        # restaurant_idには適切なRestaurantインスタンスを設定（例としてURLパラメータから取得）
-        # ここでは`restaurant_id`がURLパラメータにあると仮定しています
-        restaurant_id = self.kwargs.get('pk')  # URLからレストランIDを取得
-        form.instance.restaurant_id = get_object_or_404(Restaurant, pk=restaurant_id)
+        restaurant_id = self.kwargs.get('pk')
+        restaurant = get_object_or_404(Restaurant, pk=restaurant_id)
+        form.instance.restaurant_id = restaurant
 
-        # フォームを保存
+        # 座席数を超える予約は不可能にする
+        if form.cleaned_data['number_of_people'] > restaurant.seating_capacity:
+            return HttpResponseBadRequest('予約人数が店舗の座席数を超えています。')
+
         return super().form_valid(form)
 
 

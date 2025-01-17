@@ -66,21 +66,38 @@ class MySetPasswordForm(SetPasswordForm):
 
 # ユーザー情報更新フォーム
 class UserUpdateForm(forms.ModelForm):
+    GENDER_CHOICES = [
+        (1, '男性'),
+        (2, '女性'),
+    ]
+    gender = forms.ChoiceField(
+        choices=GENDER_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
     class Meta:
         model = User
-        fields = ('username', 'email', 'last_name', 'first_name', 'birthday', 'gender', 'is_premium')
+        fields = ('username', 'email', 'last_name', 'first_name', 'birthday', 'gender')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
+
 # 有料会員登録フォーム
 class UserUpgradeForm(forms.ModelForm):
+    GENDER_CHOICES = [
+        (1, '男性'),
+        (2, '女性'),
+    ]
+    gender = forms.ChoiceField(
+        choices=GENDER_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
     class Meta:
         model = User
         fields = ('birthday', 'gender')
-        widgets = {'is_premium':forms.HiddenInput()}
+        widgets = {'is_premium': forms.HiddenInput()}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
