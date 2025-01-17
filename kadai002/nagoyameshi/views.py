@@ -100,9 +100,23 @@ class ReservationView(LoginRequiredMixin, CreateView):
         restaurant = get_object_or_404(Restaurant, pk=restaurant_id)
         form.instance.restaurant_id = restaurant
 
+        reserved_datetime = form.cleaned_data['reserved_datetime']
+        reserved_day_of_week = reserved_datetime.isoweekday()
+
+        # 定休日のチェック
+        if reserved_day_of_week == restaurant.closed_info:
+            form.add_error('reserved_datetime', '定休日です。別の日付を選択してください。')
+            return self.form_invalid(form)
+
+        # 営業時間外のチェック
+        if not (restaurant.opening_time <= reserved_datetime.time() <= restaurant.closing_time):
+            form.add_error('reserved_datetime', '営業時間外です。別の時間を選択してください。')
+            return self.form_invalid(form)
+
         # 座席数を超える予約は不可能にする
         if form.cleaned_data['number_of_people'] > restaurant.seating_capacity:
-            return HttpResponseBadRequest('予約人数が店舗の座席数を超えています。')
+            form.add_error('number_of_people', '予約人数が店舗の座席数を超えています。')
+            return self.form_invalid(form)
 
         return super().form_valid(form)
 
