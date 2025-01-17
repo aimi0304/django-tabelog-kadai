@@ -2,7 +2,7 @@ from django.views.generic import (
     TemplateView, CreateView, DetailView, UpdateView, FormView,
     DeleteView, ListView, View
 )
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from .forms import (
     SignUpForm, activate_user, LoginForm,
     MyPasswordResetForm, MySetPasswordForm,
@@ -361,6 +361,7 @@ class StripeWebhookView(View):
 
 
 # クレジットカード編集
+@method_decorator(csrf_exempt, name='dispatch')
 class UpdateCardView(View):
     def post(self, request, *args, **kwargs):
         stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -368,22 +369,26 @@ class UpdateCardView(View):
         try:
             logger.debug(f"User ID: {request.user.id}")
             stripe_customer = StripeCustomer.objects.get(user_id=request.user)
+            
+            # 動的にユーザーIDを含むURLを生成
+            return_url = request.build_absolute_uri(
+                reverse('mypage', kwargs={'pk': request.user.id})
+            )
+            
             billing_portal_session = stripe.billing_portal.Session.create(
                 customer=stripe_customer.stripe_customer_id,
-                return_url='https://suzuki-nagoyameshi-3cf72cebd974.herokuapp.com/mypage/'  # カード情報編集後のリダイレクトURL
+                return_url=return_url  # 動的に生成したURLを使用
             )
             return HttpResponseRedirect(billing_portal_session.url)
-            # return JsonResponse({'url': billing_portal_session.url})
         except StripeCustomer.DoesNotExist:
             logger.error(f"StripeCustomer.DoesNotExist for user: {request.user.id}")
             messages.error(request, 'Stripe customer record not found.')
             return render(request, 'update_card.html', {'message': 'Stripe customer record not found.'})
-            # return JsonResponse({'error': 'Stripe customer record not found'}, status=404)
         except Exception as e:
             logger.error(f"Exception occurred: {str(e)}")
             messages.error(request, str(e))
             return render(request, 'update_card.html', {'message': f'Error: {str(e)}'})
-            # return JsonResponse({'error': str(e)}, status=400)
+
 
 
 # サブスクリプション解除
