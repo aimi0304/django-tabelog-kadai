@@ -5,8 +5,21 @@
 {% block title %}有料会員登録ありがとうございます{% endblock %}
 
 {% block content %}
-<h1>有料会員登録完了</h1>
-<p>続いて、カード情報の入力へ進んでください。</p>
+<h3>以下の通り登録しました</h3>
+<!-- ユーザー情報の表示 -->
+<div>
+    {% if user.gender == 1 %}
+        <p><strong>性別:</strong> 男性</p>
+    {% elif user.gender == 2 %}
+        <p><strong>性別:</strong> 女性</p>
+    {% else %}
+    <p><strong>性別:</strong> 入力内容を確認してください</p>
+    {% endif %}
+    <p><strong>誕生日:</strong> {{ user.birthday }}</p>
+</div>
+<div>
+    <p>続いて、カード情報の入力へ進んでください。</p>
+<div>
 <script src="https://js.stripe.com/v3/"></script>  <!-- new -->
 <script src="{% static "subscription/js/main.js" %}"></script> <!-- new -->
 <div class="container mt-5">

@@ -41,7 +41,7 @@ User = get_user_model()
 class SignupView(CreateView):
     form_class = SignUpForm
     template_name = "signup.html"
-    success_url = reverse_lazy('top')  # メール確認のページへリダイレクト
+    success_url = reverse_lazy('login_url')  # メール確認のページへリダイレクト
 
     def form_valid(self, form):
         # ユーザーを作成
@@ -81,6 +81,10 @@ class ActivateView(View):
 
         # トークンが無効な場合
         return redirect('signup')
+
+
+class LoginURLView(TemplateView):
+    template_name = 'login_url.html'
 
 
 class LoginView(LoginView):
@@ -156,6 +160,13 @@ class UserUpgradeView(OnlyYouMixin, UpdateView):
 
 class UpdaUserUpgradeSuccess(LoginRequiredMixin, TemplateView):
     template_name = "user_upgrade_success.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # ユーザーオブジェクトを取得
+        user = get_object_or_404(User, pk=self.kwargs['pk'])
+        context['user'] = user
+        return context
 
 
 class UserDeleteView(OnlyYouMixin, DeleteView):

@@ -15,6 +15,9 @@
                 {{ field.label }}
                 {{ field }}
                 {{ field.errors }}
+                {% if field.name == 'reserved_datetime' %}
+                    <small class="form-text text-muted">例: 2025-01-10 12:00:00</small>
+                {% endif %}
                 <br>
             {% endfor %}
             <button type="submit">予約</button>

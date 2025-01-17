@@ -12,12 +12,16 @@
                 <tr>
                     <th><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
                     <td>{{ field }} {{ field.errors }}</td>
+                    {% if field.name == 'birthday' %}
+                        <small class="form-text text-muted">例: 1990-01-01</small>
+                    {% elif field.name == 'gender' %}
+                        <small class="form-text text-muted">例: 男性は１，女性は２を選択</small>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    {% csrf_token %}
-    <button type="submit" class="btn btn-success btn-lg" >カード情報の入力へ進む</button>
+    <button type="submit">保存</button>
 </form>
 
 {% endblock %}

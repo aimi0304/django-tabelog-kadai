@@ -68,7 +68,7 @@ class MySetPasswordForm(SetPasswordForm):
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('last_name', 'first_name')
+        fields = ('username', 'email', 'last_name', 'first_name', 'birthday', 'gender', 'is_premium')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -79,7 +79,7 @@ class UserUpdateForm(forms.ModelForm):
 class UserUpgradeForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('birthday', 'gender', 'is_premium')
+        fields = ('birthday', 'gender')
         widgets = {'is_premium':forms.HiddenInput()}
 
     def __init__(self, *args, **kwargs):

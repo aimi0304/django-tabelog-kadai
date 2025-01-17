@@ -13,12 +13,23 @@
             {% csrf_token %}
             {{ form.non_field_errors }}
             {% for field in form %}
-                {{ field.label }}
-                {{ field }}
-                {{ field.errors }}
-                <br>
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                    
+                    {% if field.name == 'birthday' %}
+                        <small class="form-text text-muted">例: 1990-01-01</small>
+                    {% elif field.name == 'gender' %}
+                        <small class="form-text text-muted">例: 男性は１，女性は２を選択</small>
+                    {% endif %}
+                </div>
             {% endfor %}
-            <button type="submit">保存</button>
+            <script src="https://js.stripe.com/v3/"></script>  <!-- new -->
+            <script src="{% static "subscription/js/main.js" %}"></script> <!-- new -->
+            <div class="container mt-5">
+                <button type="submit">確認とカード情報入力へ進む</button>
+            </div>
         </form>
     </div>
 </div>

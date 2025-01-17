@@ -30,6 +30,7 @@ urlpatterns = [
     path('nagoyameshi/', nagoya_views.RestaulantSearchView.as_view(), name="search_result"),
     path('signup/', users_views.SignupView.as_view(), name="signup"),
     path('accounts/activate/<uidb64>/<token>/', users_views.ActivateView.as_view(), name="activate"),
+    path('login_url/', users_views.LoginURLView.as_view(), name="login_url"),
     path('password_reset/', users_views.PasswordReset.as_view(), name='password_reset'),
     path('password_reset/done/', users_views.PasswordResetDone.as_view(), name='password_reset_done'),
     path('password_reset/confirm/<uidb64>/<token>/', users_views.PasswordResetConfirm.as_view(), name='password_reset_confirm'),
